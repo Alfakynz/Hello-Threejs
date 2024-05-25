@@ -21,11 +21,19 @@ class Cube extends Shape {
 class Plane extends Shape {
     constructor(color, x, y, z) {
         super();
-        this.geometry = new THREE.BoxGeometry(10, 1, 10);
+        this.geometry = new THREE.BoxGeometry(10, 10, 1);
         this.material = new THREE.MeshBasicMaterial({ color: color });
         this.mesh = new THREE.Mesh(this.geometry, this.material);
         this.mesh.rotation.x = -Math.PI / 2;
         this.mesh.position.set(x, y, z);
+    }
+}
+
+class Border {
+    constructor(shape, color) {
+        this.geometry = new THREE.EdgesGeometry(shape.geometry);
+        this.material = new THREE.LineBasicMaterial({ color: color });
+        this.mesh = new THREE.LineSegments(this.geometry, this.material);
     }
 }
 
@@ -40,9 +48,6 @@ export function createPlane(color, x, y, z) {
 }
 
 export function createBorder(shape, color) {
-    const border = new THREE.LineSegments(
-        new THREE.EdgesGeometry(shape.geometry),
-        new THREE.LineBasicMaterial({ color: color })
-    );
-    return border;
+    const border = new Border(shape, color);
+    return border.mesh;
 }

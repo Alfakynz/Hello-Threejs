@@ -1,47 +1,37 @@
 import * as THREE from 'three';
 
-// Variables pour suivre les commandes de déplacement et de rotation
-let moveSpeed = 0.1;
-let moveForward = false;
-let moveBackward = false;
-let turnLeft = false;
-let turnRight = false;
-let goUp = false;
-let goDown = false;
+export function handleControls(camera, cameraDirection, keysPressed, moveSpeed) {
+    // Obtenir la direction de la caméra
+    camera.getWorldDirection(cameraDirection);
 
-// Variables pour suivre la rotation de la caméra
-let yaw = 0;  // Rotation horizontale (gauche/droite)
-let pitch = 0;  // Rotation verticale (haut/bas)
-const sensitivity = 0.002;  // Sensibilité de la souris
-
-// Variables pour suivre la direction de la caméra
-const cameraDirection = new THREE.Vector3();
-
-export function handleControls(event) {
-    switch (event.key) {
-        case 'z':
-            moveForward = true;
-            break;
-        case 's':
-            moveBackward = true;
-            break;
-        case 'q':
-            turnLeft = true;
-            break;
-        case 'd':
-            turnRight = true;
-            break;
-        case ' ':
-            goUp = true;
-            break;
-        case 'Shift':
-            goDown = true;
-            break;
+    // Avancer
+    if (keysPressed['KeyW']) {
+        const forwardDirection = new THREE.Vector3(cameraDirection.x, 0, cameraDirection.z).normalize();
+        camera.position.add(forwardDirection.clone().multiplyScalar(moveSpeed));
     }
-}
-
-export function onMouseMove(event) {
-    yaw -= event.movementX * sensitivity;
-    pitch -= event.movementY * sensitivity;
-    pitch = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, pitch));  // Limiter le pitch entre -90° et 90°
+    // Reculer
+    if (keysPressed['KeyS']) {
+        const forwardDirection = new THREE.Vector3(-cameraDirection.x, 0, -cameraDirection.z).normalize();
+        camera.position.add(forwardDirection.clone().multiplyScalar(moveSpeed));
+    }
+    // Tourner à gauche
+    if (keysPressed['KeyA']) {
+        const leftDirection = new THREE.Vector3(cameraDirection.z, 0, -cameraDirection.x).normalize();
+        camera.position.add(leftDirection.clone().multiplyScalar(moveSpeed));
+    }
+    // Tourner à droite
+    if (keysPressed['KeyD']) {
+        const rightDirection = new THREE.Vector3(-cameraDirection.z, 0, cameraDirection.x).normalize();
+        camera.position.add(rightDirection.clone().multiplyScalar(moveSpeed));
+    }
+    // Monter
+    if (keysPressed['Space']) {
+        const upDirection = new THREE.Vector3(0, 1, 0);
+        camera.position.add(upDirection.clone().multiplyScalar(moveSpeed));
+    }
+    // Descendre
+    if (keysPressed['ShiftLeft']) {
+        const upDirection = new THREE.Vector3(0, -1, 0);
+        camera.position.add(upDirection.clone().multiplyScalar(moveSpeed));
+    }
 }
