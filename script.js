@@ -1,33 +1,39 @@
 import * as THREE from 'three';
+import { initScene, initCamera, initRenderer } from './sceneSetup';
+import { createCube } from './shapes';
 
 // Création de la scène, de la caméra et du rendu
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-
-const renderer = new THREE.WebGLRenderer();
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
+const scene = initScene();
+const camera = initCamera();
+const renderer = initRenderer();
 
 // Création du premier cube
+const cube1 = createCube(0x0000ff, -1, 0, 0);
+const cube2 = createCube(0xffffff, 0, 0, 0);
+const cube3 = createCude(0xff0000, 1, 0, 0);
+/*
 const geometry1 = new THREE.BoxGeometry(1, 1, 1);
 const material1 = new THREE.MeshBasicMaterial({ color: 0x0000ff });
 const cube1 = new THREE.Mesh(geometry1, material1);
-cube1.position.set(-1, 0, 0)
+cube1.position.set(-1, 0, 0)*/
 scene.add(cube1);
+scene.add(cube2);
+scene.add(cube3);
 
 // Création du deuxième cube
-const geometry2 = new THREE.BoxGeometry(1, 1, 1);
+/*const geometry2 = new THREE.BoxGeometry(1, 1, 1);
 const material2 = new THREE.MeshBasicMaterial({ color: 0xffffff });
 const cube2 = new THREE.Mesh(geometry2, material2);
 cube2.position.set(0, 0, 0); // Positionner le deuxième cube à côté du premier
-scene.add(cube2);
+scene.add(cube2);*/
 
 // Création du troisième cube
+/*
 const geometry3 = new THREE.BoxGeometry(1, 1, 1);
 const material3 = new THREE.MeshBasicMaterial({ color: 0xff0000 });
 const cube3 = new THREE.Mesh(geometry3, material3);
 cube3.position.set(1, 0, 0); // Positionner le deuxième cube à côté du premier
-scene.add(cube3);
+scene.add(cube3);*/
 
 // Création du quatrième cube
 const geometry4 = new THREE.BoxGeometry(1, 1, 1);
@@ -77,7 +83,7 @@ function handleControls() {
 
 	// Avancer
 	if (moveForward) {
-		camera.position.add(cameraDirection.clone().multiplyScalar(moveSpeed));
+		camera.position.add(cameraDirection.multiplyScalar(moveSpeed));
 	}
 	// Reculer
 	if (moveBackward) {
@@ -189,6 +195,12 @@ const border6 = new THREE.LineSegments(
 	new THREE.LineBasicMaterial({ color: 'white' })
 );
 cube6.add(border6);
+
+const border = new THREE.LineSegments(
+	new THREE.EdgesGeometry(plane.geometry),
+	new THREE.LineBasicMaterial({ color: 'white' })
+);
+plane.add(border);
 
 // Variables pour suivre la rotation de la caméra
 let yaw = 0;  // Rotation horizontale (gauche/droite)
